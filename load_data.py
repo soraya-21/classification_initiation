@@ -37,7 +37,6 @@ def train_model(df):
     y_pred = model_baseline.predict(X_test)
 
     # Évaluation
-    print("\n--- RÉSULTATS DU MODÈLE BASELINE (DONNÉES BRUTES) ---")
     print(f"Accuracy Score: {accuracy_score(y_test, y_pred):.4f}")
     print("\nMatrice de Confusion :")
     print(confusion_matrix(y_test, y_pred))
