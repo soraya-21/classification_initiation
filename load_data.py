@@ -15,10 +15,10 @@ def data_loading():
 
     df = pd.read_csv(full_path, sep=';')
 
-    print("\n--- Aperçu des 5 premières lignes ---")
+    print("\n Aperçu des 5 premières lignes")
     print(df.head(25))
 
-    print("\n--- Informations structurelles (Types et Valeurs Manquantes) ---")
+    print("\n Informations structurelles (Types et Valeurs Manquantes)"
     print(df.info())
     return df
 
