@@ -23,6 +23,14 @@ def data_loading():
     return df
 
 def train_model(df):
+    # === FEATURE ENGINEERING: INDICE DE MASSE CORPOREL (IMC) ===
+    # Calculer l'IMC: poids (kg) / (hauteur (m)^2)
+    # L'hauteur est en cm, donc on la divise par 100
+    if 'weight' in df.columns and 'height' in df.columns:
+        df['imc'] = df['weight'] / ((df['height'] / 100) ** 2)
+        print(f"\n✓ Feature 'imc' créée avec succès")
+        print(f"  Moyenne: {df['imc'].mean():.2f}, Écart-type: {df['imc'].std():.2f}")
+    
     X = df.drop(['id', 'cardio'], axis=1)
     y = df['cardio']
 
@@ -37,7 +45,7 @@ def train_model(df):
     y_pred = model_baseline.predict(X_test)
 
     # Évaluation
-    print(f"Accuracy Score: {accuracy_score(y_test, y_pred):.4f}")
+    print(f"\nAccuracy Score: {accuracy_score(y_test, y_pred):.4f}")
     print("\nMatrice de Confusion :")
     print(confusion_matrix(y_test, y_pred))
     print("\nRapport de Classification :")

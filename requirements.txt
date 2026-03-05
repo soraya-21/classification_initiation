@@ -1,5 +1,9 @@
 kagglehub==1.0.0
-pandas==3.0.1
+pandas
 scikit-learn==1.8.0
 plotly
 matplotlib
+streamlit>=1.28.0
+numpy
+scipy
+altair>=5.0.0
