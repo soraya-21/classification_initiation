@@ -1,21 +1,48 @@
 import kagglehub
 import pandas as pd
 import os
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
-from IPython.core.display_functions import display
+def data_loading():
+    path = kagglehub.dataset_download("sulianova/cardiovascular-disease-dataset")
+    print("Path to dataset files:", path)
 
-path = kagglehub.dataset_download("sulianova/cardiovascular-disease-dataset")
-print("Path to dataset files:", path)
+    files = os.listdir(path)
+    csv_file = [f for f in files if f.endswith('.csv')][0]
+    full_path = os.path.join(path, csv_file)
 
-files = os.listdir(path)
-csv_file = [f for f in files if f.endswith('.csv')][0]
-full_path = os.path.join(path, csv_file)
+    df = pd.read_csv(full_path, sep=';')
 
-df = pd.read_csv(full_path,sep=';',decimal=',',quotechar='"', quoting=3, encoding='utf-8')
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-display(df.head())
+    print("\n Aperçu des 5 premières lignes")
+    print(df.head(25))
 
+    print("\n Informations structurelles (Types et Valeurs Manquantes)")
+    print(df.info())
+    return df
 
-print("\n--- Informations structurelles (Types et Valeurs Manquantes) ---")
-print(df.info())
+def train_model(df):
+    X = df.drop(['id', 'cardio'], axis=1)
+    y = df['cardio']
+
+    # Séparation Entraînement 80/20
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Création et entraînement du modèle Baseline
+    model_baseline = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1)
+    model_baseline.fit(X_train, y_train)
+
+    # Prédiction
+    y_pred = model_baseline.predict(X_test)
+
+    # Évaluation
+    print(f"Accuracy Score: {accuracy_score(y_test, y_pred):.4f}")
+    print("\nMatrice de Confusion :")
+    print(confusion_matrix(y_test, y_pred))
+    print("\nRapport de Classification :")
+    print(classification_report(y_test, y_pred))
+
+if __name__ == "__main__":
+    df = data_loading()
+    train_model(df)
